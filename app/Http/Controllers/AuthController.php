@@ -81,6 +81,16 @@ class AuthController extends Controller
         return $this->createNewToken($token, $message);
     }
 
+    public function profile(): JsonResponse
+    {
+        $user = auth()->user();
+
+        return response()->json([
+            'message' => 'User profile successfully retrieved',
+            'user' => $user
+        ], 200);
+    }
+
     protected function createNewToken($token, $message): JsonResponse
     {
         return response()->json([
