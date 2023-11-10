@@ -60,12 +60,8 @@ class AuthController extends Controller
             ], 401);
         }
 
-        return response()->json([
-            'message' => 'User successfully logged in',
-            'token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ], 200);
+        $message = 'User successfully logged in';
+        return $this->createNewToken($token, $message);
     }
 
     public function logout(): JsonResponse
@@ -81,11 +77,17 @@ class AuthController extends Controller
     {
         $token = auth()->refresh();
 
+        $message = 'Token successfully refreshed';
+        return $this->createNewToken($token, $message);
+    }
+
+    protected function createNewToken($token, $message): JsonResponse
+    {
         return response()->json([
-            'message' => 'Token successfully refreshed',
+            'message' => $message,
             'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
-        ], 200);
+        ]);
     }
 }
