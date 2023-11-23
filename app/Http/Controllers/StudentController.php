@@ -26,7 +26,13 @@ class StudentController extends Controller
      */
     public function store(StudentRequest $request)
     {
-        // TODO: Implement store() method.
+        $student = Student::create($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Student Created',
+            'data' => $student
+        ], 201);
     }
 
     /**
