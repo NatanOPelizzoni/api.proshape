@@ -19,7 +19,7 @@ return new class extends Migration
             $table->float('height');
             $table->string('training_goals');
             $table->integer('training_frequency');
-            $table->string('health_restrictions');
+            $table->string('health_restrictions')->nullable();
             $table->timestamps();
         });
     }
