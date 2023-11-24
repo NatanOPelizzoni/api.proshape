@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\student\StudentRequest;
 use App\Models\Student;
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
+
+    private $request;
+
+    public function __construct(
+        Request $request,
+    ){
+        $this->request = $request;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -38,24 +48,70 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Student $student)
+    public function show()
     {
-        // TODO: Implement show() method.
+        $id = $this->request->route('id');
+        $student = Student::find($id);
+        if(!$student){
+            return response()->json([
+                'success' => false,
+                'message' => 'Student Not Found',
+                'data' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Student Detail',
+            'data' => $student
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(StudentRequest $request, Student $student)
+    public function update(StudentRequest $request)
     {
-        // TODO: Implement update() method.
+        $id = $this->request->route('id');
+        $student = Student::find($id);
+        if(!$student){
+            return response()->json([
+                'success' => false,
+                'message' => 'Student Not Found',
+                'data' => null
+            ], 404);
+        }
+
+        $student->update($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Student Updated',
+            'data' => $student
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy()
     {
-        // TODO: Implement destroy() method.
+        $id = $this->request->route('id');
+        $student = Student::find($id);
+        if(!$student){
+            return response()->json([
+                'success' => false,
+                'message' => 'Student Not Found',
+                'data' => null
+            ], 404);
+        }
+
+        $student->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Student Deleted',
+            'data' => $student
+        ], 200);
     }
 }
