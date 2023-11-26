@@ -16,3 +16,11 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], static function(){
     Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
     Route::get('profile', 'App\Http\Controllers\AuthController@profile');
 });
+
+Route::group(['middleware' => 'api'], static function(){
+    Route::get('student', 'App\Http\Controllers\StudentController@index');
+    Route::post('student', 'App\Http\Controllers\StudentController@store');
+    Route::get('student/{id}', 'App\Http\Controllers\StudentController@show');
+    Route::put('student/{id}', 'App\Http\Controllers\StudentController@update');
+    Route::delete('student/{id}', 'App\Http\Controllers\StudentController@destroy');
+});
