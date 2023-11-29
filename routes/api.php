@@ -35,9 +35,17 @@ Route::group(['middleware' => 'api'], static function(){
 });
 
 Route::group(['middleware' => 'api'], static function(){
-    Route::get('exercises', 'App\Http\Controllers\ExercisesController@index');
-    Route::post('exercises', 'App\Http\Controllers\ExercisesController@store');
-    Route::get('exercises/{id}', 'App\Http\Controllers\ExercisesController@show');
-    Route::put('exercises/{id}', 'App\Http\Controllers\ExercisesController@update');
-    Route::delete('exercises/{id}', 'App\Http\Controllers\ExercisesController@destroy');
+    Route::get('exercise', 'App\Http\Controllers\ExercisesController@index');
+    Route::post('exercise', 'App\Http\Controllers\ExercisesController@store');
+    Route::get('exercise/{id}', 'App\Http\Controllers\ExercisesController@show');
+    Route::put('exercise/{id}', 'App\Http\Controllers\ExercisesController@update');
+    Route::delete('exercise/{id}', 'App\Http\Controllers\ExercisesController@destroy');
+});
+
+Route::group(['middleware' => 'api'], static function(){
+    Route::get('training-sheet', 'App\Http\Controllers\TrainingSheetController@index');
+    Route::post('training-sheet', 'App\Http\Controllers\TrainingSheetController@store');
+    Route::get('training-sheet/{id}', 'App\Http\Controllers\TrainingSheetController@show');
+    Route::put('training-sheet/{id}', 'App\Http\Controllers\TrainingSheetController@update');
+    Route::delete('training-sheet/{id}', 'App\Http\Controllers\TrainingSheetController@destroy');
 });
