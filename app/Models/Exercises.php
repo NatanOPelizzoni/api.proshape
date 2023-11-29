@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MuscularGroup extends Model
+class Exercises extends Model
 {
     protected $fillable = [
         'name',
     ];
 
-    public function exercises()
+    public function muscularGroups()
     {
-        return $this->belongsToMany(Exercises::class, 'exercise_muscular_groups', 'muscular_group_id', 'exercise_id');
+        return $this->belongsToMany(MuscularGroup::class, 'exercise_muscular_groups', 'exercise_id', 'muscular_group_id');
     }
 }
