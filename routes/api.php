@@ -29,6 +29,7 @@ Route::group(['middleware' => 'api'], static function(){
     Route::get('muscular-group', 'App\Http\Controllers\MuscularGroupController@index');
     Route::post('muscular-group', 'App\Http\Controllers\MuscularGroupController@store');
     Route::get('muscular-group/{id}', 'App\Http\Controllers\MuscularGroupController@show');
+    Route::get('muscular-group/{id}/exercises', 'App\Http\Controllers\MuscularGroupController@showExercises');
     Route::put('muscular-group/{id}', 'App\Http\Controllers\MuscularGroupController@update');
     Route::delete('muscular-group/{id}', 'App\Http\Controllers\MuscularGroupController@destroy');
 });

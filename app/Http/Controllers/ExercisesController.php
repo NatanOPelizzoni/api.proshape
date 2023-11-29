@@ -38,6 +38,9 @@ class ExercisesController extends Controller
     {
         $exercise = Exercises::create($request->validated());
 
+        $muscularGroupId = $request->input('muscular_group_id');
+        $exercise->muscularGroups()->attach($muscularGroupId);
+
         return response()->json([
             'success' => true,
             'message' => 'Exercise Created',
@@ -84,6 +87,9 @@ class ExercisesController extends Controller
 
         $exercise->update($request->validated());
 
+        $muscularGroupId = $request->input('muscular_group_id');
+        $exercise->muscularGroups()->sync([$muscularGroupId]);
+
         return response()->json([
             'success' => true,
             'message' => 'Exercise Updated',
@@ -105,6 +111,8 @@ class ExercisesController extends Controller
                 'data' => null
             ], 404);
         }
+
+        $exercise->muscularGroups()->detach();
 
         $exercise->delete();
 

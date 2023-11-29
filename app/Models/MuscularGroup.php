@@ -13,6 +13,6 @@ class MuscularGroup extends Model
 
     public function exercises()
     {
-        return $this->belongsToMany(Exercise::class, 'exercise_muscular_group', 'muscular_group_id', 'exercise_id');
+        return $this->belongsToMany(Exercises::class, 'exercise_muscular_groups', 'muscular_group_id', 'exercise_id');
     }
 }
