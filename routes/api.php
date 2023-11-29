@@ -24,10 +24,20 @@ Route::group(['middleware' => 'api'], static function(){
     Route::put('student/{id}', 'App\Http\Controllers\StudentController@update');
     Route::delete('student/{id}', 'App\Http\Controllers\StudentController@destroy');
 });
+
 Route::group(['middleware' => 'api'], static function(){
     Route::get('muscular-group', 'App\Http\Controllers\MuscularGroupController@index');
     Route::post('muscular-group', 'App\Http\Controllers\MuscularGroupController@store');
     Route::get('muscular-group/{id}', 'App\Http\Controllers\MuscularGroupController@show');
+    Route::get('muscular-group/{id}/exercises', 'App\Http\Controllers\MuscularGroupController@showExercises');
     Route::put('muscular-group/{id}', 'App\Http\Controllers\MuscularGroupController@update');
     Route::delete('muscular-group/{id}', 'App\Http\Controllers\MuscularGroupController@destroy');
+});
+
+Route::group(['middleware' => 'api'], static function(){
+    Route::get('exercises', 'App\Http\Controllers\ExercisesController@index');
+    Route::post('exercises', 'App\Http\Controllers\ExercisesController@store');
+    Route::get('exercises/{id}', 'App\Http\Controllers\ExercisesController@show');
+    Route::put('exercises/{id}', 'App\Http\Controllers\ExercisesController@update');
+    Route::delete('exercises/{id}', 'App\Http\Controllers\ExercisesController@destroy');
 });

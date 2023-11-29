@@ -68,6 +68,32 @@ class MuscularGroupController extends Controller
     }
 
     /**
+     * Display the exercises for a specific muscular group.
+     */
+    public function showExercises()
+    {
+        $id = $this->request->route('id');
+        $muscular_group = MuscularGroup::find($id);
+
+        if (!$muscular_group) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Muscular Group Not Found',
+                'data' => null
+            ], 404);
+        }
+
+        $exercises = $muscular_group->exercises;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Exercises for Muscular Group',
+            'data' => $exercises
+        ], 200);
+    }
+
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(MuscularGroupRequest $request)
@@ -104,6 +130,14 @@ class MuscularGroupController extends Controller
                 'message' => 'Muscular Group Not Found',
                 'data' => null
             ], 404);
+        }
+
+        if ($muscular_group->exercises()->count() > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Muscular Group has associated exercises. Cannot delete.',
+                'data' => null
+            ], 422);
         }
 
         $muscular_group->delete();
