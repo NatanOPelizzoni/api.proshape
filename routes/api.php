@@ -41,3 +41,11 @@ Route::group(['middleware' => 'api'], static function(){
     Route::put('exercises/{id}', 'App\Http\Controllers\ExercisesController@update');
     Route::delete('exercises/{id}', 'App\Http\Controllers\ExercisesController@destroy');
 });
+
+Route::group(['middleware' => 'api'], static function(){
+    Route::get('exercise-training-sheet', 'App\Http\Controllers\ExerciseTrainingSheetController@index');
+    Route::post('exercise-training-sheet', 'App\Http\Controllers\ExerciseTrainingSheetController@store');
+    Route::get('exercise-training-sheet/{id}', 'App\Http\Controllers\ExerciseTrainingSheetController@show');
+    Route::put('exercise-training-sheet/{id}', 'App\Http\Controllers\ExerciseTrainingSheetController@update');
+    Route::delete('exercise-training-sheet/{id}', 'App\Http\Controllers\ExerciseTrainingSheetController@destroy');
+});
