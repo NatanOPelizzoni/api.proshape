@@ -2,19 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\User;
+use App\Repositories\AuthRepositoryInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
+    protected $authRepository;
+
+    public function __construct(AuthRepositoryInterface $authRepository)
+    {
+        $this->authRepository = $authRepository;
+    }
+
     public function register(array $data): JsonResponse
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
-        ]);
+        $user = $this->authRepository->register($data);
 
         return response()->json([
             'message' => 'User successfully registered',
@@ -24,21 +26,7 @@ class AuthService
 
     public function login(array $credentials): JsonResponse
     {
-        $user = User::where('email', $credentials['email'])->first();
-
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
-        }
-
-        if (!Hash::check($credentials['password'], $user->password)) {
-            return response()->json([
-                'message' => 'Incorrect password'
-            ], 401);
-        }
-
-        $token = auth()->attempt($credentials);
+        $token = $this->authRepository->login($credentials);
 
         if (!$token) {
             return response()->json([
@@ -52,7 +40,7 @@ class AuthService
 
     public function logout(): JsonResponse
     {
-        auth()->logout();
+        $this->authRepository->logout();
 
         return response()->json([
             'message' => 'User successfully logged out'
@@ -61,7 +49,7 @@ class AuthService
 
     public function refresh(): JsonResponse
     {
-        $token = auth()->refresh();
+        $token = $this->authRepository->refresh();
 
         $message = 'Token successfully refreshed';
         return $this->createNewToken($token, $message);
@@ -69,7 +57,7 @@ class AuthService
 
     public function profile(): JsonResponse
     {
-        $user = auth()->user();
+        $user = $this->authRepository->profile();
 
         return response()->json([
             'message' => 'User profile successfully retrieved',
