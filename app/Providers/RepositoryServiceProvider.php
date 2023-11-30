@@ -24,5 +24,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\AuthRepositoryInterface::class, \App\Repositories\AuthRepository::class);
         $this->app->bind(\App\Repositories\StudentRepositoryInterface::class, \App\Repositories\StudentRepository::class);
         $this->app->bind(\App\Repositories\MuscularGroupRepositoryInterface::class, \App\Repositories\MuscularGroupRepository::class);
+        $this->app->bind(\App\Repositories\ExerciseRepositoryInterface::class, \App\Repositories\ExerciseRepository::class);
     }
 }
