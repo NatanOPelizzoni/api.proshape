@@ -3,148 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\muscular_group\MuscularGroupRequest;
-use App\Models\MuscularGroup;
-use Illuminate\Http\Request;
+use App\Services\MuscularGroupService;
 
 class MuscularGroupController extends Controller
 {
+    private $muscularGroupService;
 
-    private $request;
-
-    public function __construct(
-        Request $request,
-    ){
-        $this->request = $request;
+    public function __construct(MuscularGroupService $muscularGroupService)
+    {
+        $this->muscularGroupService = $muscularGroupService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $muscular_groups = MuscularGroup::all();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group List',
-            'data' => $muscular_groups
-        ], 200);
+        return $this->muscularGroupService->getAllMuscularGroups();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(MuscularGroupRequest $request)
     {
-        $muscular_group = MuscularGroup::create($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Created',
-            'data' => $muscular_group
-        ], 201);
+        return $this->muscularGroupService->createMuscularGroup($request);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function show($id)
     {
-        $id = $this->request->route('id');
-        $muscular_group = MuscularGroup::find($id);
-        if(!$muscular_group){
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Detail',
-            'data' => $muscular_group
-        ], 200);
+        return $this->muscularGroupService->getMuscularGroupById($id);
     }
 
-    /**
-     * Display the exercises for a specific muscular group.
-     */
-    public function showExercises()
+    public function showExercises($id)
     {
-        $id = $this->request->route('id');
-        $muscular_group = MuscularGroup::find($id);
-
-        if (!$muscular_group) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $exercises = $muscular_group->exercises;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercises for Muscular Group',
-            'data' => $exercises
-        ], 200);
+        return $this->muscularGroupService->getExercisesForMuscularGroup($id);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(MuscularGroupRequest $request)
+    public function update(MuscularGroupRequest $request, $id)
     {
-        $id = $this->request->route('id');
-        $muscular_group = MuscularGroup::find($id);
-        if(!$muscular_group){
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $muscular_group->update($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Updated',
-            'data' => $muscular_group
-        ], 200);
+        return $this->muscularGroupService->updateMuscularGroup($request, $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function destroy($id)
     {
-        $id = $this->request->route('id');
-        $muscular_group = MuscularGroup::find($id);
-        if(!$muscular_group){
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        if ($muscular_group->exercises()->count() > 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group has associated exercises. Cannot delete.',
-                'data' => null
-            ], 422);
-        }
-
-        $muscular_group->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Deleted'
-        ], 200);
+        return $this->muscularGroupService->deleteMuscularGroup($id);
     }
 }

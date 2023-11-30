@@ -3,123 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\exercise\ExercisesRequest;
-use App\Models\Exercises;
-use Illuminate\Http\Request;
+use App\Services\ExerciseService;
 
 class ExercisesController extends Controller
 {
+    private $exerciseService;
 
-    private $request;
-
-    public function __construct(
-        Request $request,
-    ){
-        $this->request = $request;
+    public function __construct(ExerciseService $exerciseService)
+    {
+        $this->exerciseService = $exerciseService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $exercise = Exercises::all();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise List',
-            'data' => $exercise
-        ], 200);
+        return $this->exerciseService->getAllExercises();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ExercisesRequest $request)
     {
-        $exercise = Exercises::create($request->validated());
-
-        $muscularGroupId = $request->input('muscular_group_id');
-        $exercise->muscularGroups()->attach($muscularGroupId);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Created',
-            'data' => $exercise
-        ], 201);
+        return $this->exerciseService->createExercise($request);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function show($id)
     {
-        $id = $this->request->route('id');
-        $exercise = Exercises::find($id);
-        if(!$exercise){
-            return response()->json([
-                'success' => false,
-                'message' => 'Exercise Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Detail',
-            'data' => $exercise
-        ], 200);
+        return $this->exerciseService->getExerciseById($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ExercisesRequest $request)
+    public function update(ExercisesRequest $request, $id)
     {
-        $id = $this->request->route('id');
-        $exercise = Exercises::find($id);
-        if(!$exercise){
-            return response()->json([
-                'success' => false,
-                'message' => 'Exercise Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $exercise->update($request->validated());
-
-        $muscularGroupId = $request->input('muscular_group_id');
-        $exercise->muscularGroups()->sync([$muscularGroupId]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Updated',
-            'data' => $exercise
-        ], 200);
+        return $this->exerciseService->updateExercise($request, $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function destroy($id)
     {
-        $id = $this->request->route('id');
-        $exercise = Exercises::find($id);
-        if(!$exercise){
-            return response()->json([
-                'success' => false,
-                'message' => 'Exercise Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $exercise->muscularGroups()->detach();
-
-        $exercise->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Deleted',
-            'data' => $exercise
-        ], 200);
+        return $this->exerciseService->deleteExercise($id);
     }
 }

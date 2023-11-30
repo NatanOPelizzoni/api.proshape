@@ -3,115 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\student\StudentRequest;
-use App\Models\Student;
-use Illuminate\Http\Request;
+use App\Services\StudentService;
 
 class StudentController extends Controller
 {
+    private $studentService;
 
-    private $request;
-
-    public function __construct(
-        Request $request,
-    ){
-        $this->request = $request;
+    public function __construct(StudentService $studentService)
+    {
+        $this->studentService = $studentService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $students = Student::all();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Student List',
-            'data' => $students
-        ], 200);
+        return $this->studentService->getAllStudents();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StudentRequest $request)
     {
-        $student = Student::create($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Student Created',
-            'data' => $student
-        ], 201);
+        return $this->studentService->createStudent($request);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function show($id)
     {
-        $id = $this->request->route('id');
-        $student = Student::find($id);
-        if(!$student){
-            return response()->json([
-                'success' => false,
-                'message' => 'Student Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Student Detail',
-            'data' => $student
-        ], 200);
+        return $this->studentService->getStudentById($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(StudentRequest $request)
+    public function update(StudentRequest $request, $id)
     {
-        $id = $this->request->route('id');
-        $student = Student::find($id);
-        if(!$student){
-            return response()->json([
-                'success' => false,
-                'message' => 'Student Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $student->update($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Student Updated',
-            'data' => $student
-        ], 200);
+        return $this->studentService->updateStudent($request, $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function destroy($id)
     {
-        $id = $this->request->route('id');
-        $student = Student::find($id);
-        if(!$student){
-            return response()->json([
-                'success' => false,
-                'message' => 'Student Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $student->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Student Deleted',
-            'data' => $student
-        ], 200);
+        return $this->studentService->deleteStudent($id);
     }
 }
