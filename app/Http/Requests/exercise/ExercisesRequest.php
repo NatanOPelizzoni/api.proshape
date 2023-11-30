@@ -18,6 +18,10 @@ class ExercisesRequest extends FormRequest
                 'required',
                 'string',
             ],
+            'muscular_group_id' => [
+                'required',
+                'exists:muscular_groups,id',
+            ],
         ];
     }
 }

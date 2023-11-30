@@ -3,115 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\training_sheet\TrainingSheetRequest;
-use App\Models\TrainingSheet;
-use Illuminate\Http\Request;
+use App\Services\TrainingSheetService;
 
 class TrainingSheetController extends Controller
 {
+    private $trainingSheetService;
 
-    private $request;
-
-    public function __construct(
-        Request $request,
-    ){
-        $this->request = $request;
+    public function __construct(TrainingSheetService $trainingSheetService)
+    {
+        $this->trainingSheetService = $trainingSheetService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $train_sheets = TrainingSheet::all();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Train Sheet List',
-            'data' => $train_sheets
-        ], 200);
+        return $this->trainingSheetService->getAllTrainingSheets();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(TrainingSheetRequest $request)
     {
-        $train_sheet = TrainingSheet::create($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Train Sheet Created',
-            'data' => $train_sheet
-        ], 201);
+        return $this->trainingSheetService->createTrainingSheet($request);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function show($id)
     {
-        $id = $this->request->route('id');
-        $train_sheet = TrainingSheet::find($id);
-        if(!$train_sheet){
-            return response()->json([
-                'success' => false,
-                'message' => 'Train Sheet Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Train Sheet',
-            'data' => $train_sheet
-        ], 200);
+        return $this->trainingSheetService->getTrainingSheetById($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(TrainingSheetRequest $request)
+    public function update(TrainingSheetRequest $request, $id)
     {
-        $id = $this->request->route('id');
-        $train_sheet = TrainingSheet::find($id);
-        if(!$train_sheet){
-            return response()->json([
-                'success' => false,
-                'message' => 'Train Sheet Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $train_sheet->update($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Train Sheet Updated',
-            'data' => $train_sheet
-        ], 200);
+        return $this->trainingSheetService->updateTrainingSheet($request, $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function destroy($id)
     {
-        $id = $this->request->route('id');
-        $train_sheet = TrainingSheet::find($id);
-        if(!$train_sheet){
-            return response()->json([
-                'success' => false,
-                'message' => 'Train Sheet Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $train_sheet->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Train Sheet Deleted',
-            'data' => $train_sheet
-        ], 200);
+        return $this->trainingSheetService->deleteTrainingSheet($id);
     }
 }

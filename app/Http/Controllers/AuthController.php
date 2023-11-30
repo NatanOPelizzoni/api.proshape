@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function register(Request $request): JsonResponse
     {
         $request->validate([
@@ -17,16 +23,7 @@ class AuthController extends Controller
             'password' => 'required|confirmed'
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+        return $this->authService->register($request->only(['name', 'email', 'password']));
     }
 
     public function login(Request $request): JsonResponse
@@ -36,68 +33,21 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $credentials = $request->only(['email', 'password']);
-
-        $user = User::where('email', $request->email)->first();
-
-        if(!$user){
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
-        }
-
-        if(!Hash::check($request->password, $user->password)){
-            return response()->json([
-                'message' => 'Incorrect password'
-            ], 401);
-        }
-
-        $token = auth()->attempt($credentials);
-
-        if(!$token) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
-        }
-
-        $message = 'User successfully logged in';
-        return $this->createNewToken($token, $message);
+        return $this->authService->login($request->only(['email', 'password']));
     }
 
     public function logout(): JsonResponse
     {
-        auth()->logout();
-
-        return response()->json([
-            'message' => 'User successfully logged out'
-        ], 200);
+        return $this->authService->logout();
     }
 
     public function refresh(): JsonResponse
     {
-        $token = auth()->refresh();
-
-        $message = 'Token successfully refreshed';
-        return $this->createNewToken($token, $message);
+        return $this->authService->refresh();
     }
 
     public function profile(): JsonResponse
     {
-        $user = auth()->user();
-
-        return response()->json([
-            'message' => 'User profile successfully retrieved',
-            'user' => $user
-        ], 200);
-    }
-
-    protected function createNewToken($token, $message): JsonResponse
-    {
-        return response()->json([
-            'message' => $message,
-            'token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+        return $this->authService->profile();
     }
 }
