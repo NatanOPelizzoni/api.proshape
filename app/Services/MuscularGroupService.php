@@ -3,119 +3,45 @@
 namespace App\Services;
 
 use App\Http\Requests\muscular_group\MuscularGroupRequest;
-use App\Models\MuscularGroup;
+use App\Repositories\MuscularGroupRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
 class MuscularGroupService
 {
+    protected $muscularGroupRepository;
+
+    public function __construct(MuscularGroupRepositoryInterface $muscularGroupRepository)
+    {
+        $this->muscularGroupRepository = $muscularGroupRepository;
+    }
+
     public function getAllMuscularGroups(): JsonResponse
     {
-        $muscularGroups = MuscularGroup::all();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group List',
-            'data' => $muscularGroups
-        ], 200);
+        return $this->muscularGroupRepository->getAllMuscularGroups();
     }
 
     public function createMuscularGroup(MuscularGroupRequest $request): JsonResponse
     {
-        $muscularGroup = MuscularGroup::create($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Created',
-            'data' => $muscularGroup
-        ], 201);
+        return $this->muscularGroupRepository->createMuscularGroup($request->validated());
     }
 
     public function getMuscularGroupById($id): JsonResponse
     {
-        $muscularGroup = MuscularGroup::find($id);
-
-        if (!$muscularGroup) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Detail',
-            'data' => $muscularGroup
-        ], 200);
+        return $this->muscularGroupRepository->getMuscularGroupById($id);
     }
 
     public function getExercisesForMuscularGroup($id): JsonResponse
     {
-        $muscularGroup = MuscularGroup::find($id);
-
-        if (!$muscularGroup) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $exercises = $muscularGroup->exercises;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercises for Muscular Group',
-            'data' => $exercises
-        ], 200);
+        return $this->muscularGroupRepository->getExercisesForMuscularGroup($id);
     }
 
     public function updateMuscularGroup(MuscularGroupRequest $request, $id): JsonResponse
     {
-        $muscularGroup = MuscularGroup::find($id);
-
-        if (!$muscularGroup) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $muscularGroup->update($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Updated',
-            'data' => $muscularGroup
-        ], 200);
+        return $this->muscularGroupRepository->updateMuscularGroup($request->validated(), $id);
     }
 
     public function deleteMuscularGroup($id): JsonResponse
     {
-        $muscularGroup = MuscularGroup::find($id);
-
-        if (!$muscularGroup) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        if ($muscularGroup->exercises()->count() > 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Muscular Group has associated exercises. Cannot delete.',
-                'data' => null
-            ], 422);
-        }
-
-        $muscularGroup->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Muscular Group Deleted'
-        ], 200);
+        return $this->muscularGroupRepository->deleteMuscularGroup($id);
     }
 }
