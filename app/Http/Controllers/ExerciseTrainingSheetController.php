@@ -3,117 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\exercise_training_sheet\ExerciseTrainingSheetRequest;
-use App\Models\ExerciseTrainingSheet;
-use Illuminate\Http\Request;
+use App\Services\ExerciseTrainingSheetService;
 
 class ExerciseTrainingSheetController extends Controller
 {
+    private $exerciseTrainingSheetService;
 
-    private $request;
-
-    public function __construct(
-        Request $request,
-    ){
-        $this->request = $request;
+    public function __construct(ExerciseTrainingSheetService $exerciseTrainingSheetService)
+    {
+        $this->exerciseTrainingSheetService = $exerciseTrainingSheetService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $exerciseTrainingSheets = ExerciseTrainingSheet::all();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Training Sheets List',
-            'data' => $exerciseTrainingSheets
-        ], 200);
+        return $this->exerciseTrainingSheetService->getAllExerciseTrainingSheets();
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ExerciseTrainingSheetRequest $request)
     {
-        $exerciseTrainingSheet = ExerciseTrainingSheet::create($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Training Sheet Created',
-            'data' => $exerciseTrainingSheet
-        ], 201);
+        return $this->exerciseTrainingSheetService->createExerciseTrainingSheet($request);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function show($id)
     {
-        $id = $this->request->route('id');
-        $exerciseTrainingSheet = ExerciseTrainingSheet::find($id);
-        if(!$exerciseTrainingSheet){
-            return response()->json([
-                'success' => false,
-                'message' => 'Exercise Training Sheet Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Training Sheet',
-            'data' => $exerciseTrainingSheet
-        ], 200);
+        return $this->exerciseTrainingSheetService->getExerciseTrainingSheetById($id);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ExerciseTrainingSheetRequest $request)
+    public function update(ExerciseTrainingSheetRequest $request, $id)
     {
-        $id = $this->request->route('id');
-        $exerciseTrainingSheet = ExerciseTrainingSheet::find($id);
-        if(!$exerciseTrainingSheet){
-            return response()->json([
-                'success' => false,
-                'message' => 'Exercise Training Sheet Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $exerciseTrainingSheet->update($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Training Sheet Updated',
-            'data' => $exerciseTrainingSheet
-        ], 200);
+        return $this->exerciseTrainingSheetService->updateExerciseTrainingSheet($request, $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function destroy($id)
     {
-        $id = $this->request->route('id');
-        $exerciseTrainingSheet = ExerciseTrainingSheet::find($id);
-        if(!$exerciseTrainingSheet){
-            return response()->json([
-                'success' => false,
-                'message' => 'Exercise Training Sheet Not Found',
-                'data' => null
-            ], 404);
-        }
-
-        $exerciseTrainingSheet->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Exercise Training Sheet Deleted',
-            'data' => $exerciseTrainingSheet
-        ], 200);
+        return $this->exerciseTrainingSheetService->deleteExerciseTrainingSheet($id);
     }
 }
