@@ -1,4 +1,3 @@
-version: '3'
 services:
     proshape_api:
         build:
