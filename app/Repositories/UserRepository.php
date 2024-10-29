@@ -38,7 +38,6 @@ class UserRepository implements UserRepositoryInterface
     public function update(array $data, $id)
     {
         $user = User::find($id);
-        //TODO: Implementar qual usuário está atualizando o usuário e salvar no campo updated_by
 
         if (!$user) {
             return ApiResponseService::error('User not found', 404);
