@@ -9,8 +9,10 @@ class UserRepository implements UserRepositoryInterface
 {
     public function create(array $data)
     {
-        $user = User::create($data);
-        //TODO: Implementar qual usuário está criando o usuário e salvar no campo created_by
+        $user = User::create(array_merge($data, [
+            'created_by' => auth()->id(),
+            'updated_by' => auth()->id(),
+        ]));
 
         return ApiResponseService::success($user, 'User Created', 201);
     }
@@ -42,7 +44,9 @@ class UserRepository implements UserRepositoryInterface
             return ApiResponseService::error('User not found', 404);
         }
 
-        $user->update($data);
+        $user->update(array_merge($data, [
+            'updated_by' => auth()->id(),
+        ]));
 
         return ApiResponseService::success($user, 'User Updated');
     }

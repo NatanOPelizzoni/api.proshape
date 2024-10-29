@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\User\UserRequest;
+use App\Http\Requests\User\UserStoreRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function store(UserRequest $request): JsonResponse
+    public function store(UserStoreRequest $request): JsonResponse
     {
         return $this->userService->create($request);
     }
@@ -31,7 +32,7 @@ class UserController extends Controller
         return $this->userService->getById($id);
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         return $this->userService->update($request, $id);
     }
