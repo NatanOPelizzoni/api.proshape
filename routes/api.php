@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BodyGroupController;
+use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -25,4 +26,12 @@ Route::group(['middleware' => 'auth:sanctum'], function ($router) {
     Route::patch('/body-group/{id}', [BodyGroupController::class, 'update']);
     Route::delete('/body-group/{id}', [BodyGroupController::class, 'destroy']);
     Route::post('/body-group/massdelete', [BodyGroupController::class, 'massDelete']);
+
+    // Exercise Routes
+    Route::post('/exercise', [ExerciseController::class, 'store']);
+    Route::get('/exercise', [ExerciseController::class, 'index']);
+    Route::get('/exercise/{id}', [ExerciseController::class, 'show']);
+    Route::patch('/exercise/{id}', [ExerciseController::class, 'update']);
+    Route::delete('/exercise/{id}', [ExerciseController::class, 'destroy']);
+    Route::post('/exercise/massdelete', [ExerciseController::class, 'massDelete']);
 });
