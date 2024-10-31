@@ -19,7 +19,8 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request): JsonResponse
     {
-        return $this->userService->create($request);
+        $data = $request->validated();
+        return $this->userService->create($data);
     }
 
     public function index(Request $request)
@@ -34,7 +35,8 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, $id)
     {
-        return $this->userService->update($request, $id);
+        $data = $request->validated();
+        return $this->userService->update($data, $id);
     }
 
     public function destroy($id)

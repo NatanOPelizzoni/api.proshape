@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Requests\User\StoreUserRequest;
-use App\Http\Requests\User\UpdateUserRequest;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,9 +15,8 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function create(StoreUserRequest $request)
+    public function create(array $data)
     {
-        $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
         return $this->userRepository->create($data);
     }
@@ -34,9 +31,8 @@ class UserService
         return $this->userRepository->getById($id);
     }
 
-    public function update(UpdateUserRequest $request, $id)
+    public function update(array $data, $id)
     {
-        $data = $request->validated();
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }

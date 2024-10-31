@@ -6,6 +6,8 @@ use App\Repositories\AuthRepository;
 use App\Repositories\AuthRepositoryInterface;
 use App\Repositories\BodyGroupRepository;
 use App\Repositories\BodyGroupRepositoryInterface;
+use App\Repositories\ClientRepository;
+use App\Repositories\ClientRepositoryInterface;
 use App\Repositories\ExerciseRepository;
 use App\Repositories\ExerciseRepositoryInterface;
 use App\Repositories\UserRepository;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(BodyGroupRepositoryInterface::class, BodyGroupRepository::class);
         $this->app->bind(ExerciseRepositoryInterface::class, ExerciseRepository::class);
+        $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
     }
 
     /**
