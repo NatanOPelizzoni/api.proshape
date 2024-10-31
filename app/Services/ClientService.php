@@ -27,7 +27,8 @@ class ClientService
         DB::beginTransaction();
 
         try {
-            $randomPassword = Str::random(10);
+//            $randomPassword = Str::random(10);
+            $randomPassword = 'password';
 
             $user = $this->userService->create([
                 'name' => $data['name'],
