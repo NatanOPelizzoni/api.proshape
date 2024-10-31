@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('current_fitness_level');
             $table->text('injuries_or_surgeries')->nullable();
             $table->string('status');
-            $table->foreignId('personal_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('instructor_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();

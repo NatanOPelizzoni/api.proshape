@@ -23,7 +23,7 @@ class Client extends Model
         'current_fitness_level',
         'injuries_or_surgeries',
         'status',
-        'personal_id',
+        'instructor_id',
         'user_id',
         'created_by',
         'updated_by',

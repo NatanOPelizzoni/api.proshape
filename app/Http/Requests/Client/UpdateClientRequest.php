@@ -75,7 +75,7 @@ class UpdateClientRequest extends FormRequest
             'status' => [
                 'string',
             ],
-            'personal_id' => [
+            'instructor_id' => [
                 'integer',
                 'exists:users,id',
             ]

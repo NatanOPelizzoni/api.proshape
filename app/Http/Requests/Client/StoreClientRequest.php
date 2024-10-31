@@ -85,7 +85,7 @@ class StoreClientRequest extends FormRequest
                 'required',
                 'string',
             ],
-            'personal_id' => [
+            'instructor_id' => [
                 'integer',
                 'exists:users,id',
             ]
