@@ -5,21 +5,51 @@ namespace App\Services;
 use App\Http\Requests\Client\StoreClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
 use App\Repositories\ClientRepositoryInterface;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ClientService
 {
     protected $clientRepository;
+    protected $userService;
 
     public function __construct(
-        ClientRepositoryInterface $clientRepository
+        ClientRepositoryInterface $clientRepository,
+        UserService $userService
     ) {
         $this->clientRepository = $clientRepository;
+        $this->userService = $userService;
     }
 
     public function create(StoreClientRequest $request)
     {
         $data = $request->validated();
-        return $this->clientRepository->create($data);
+        DB::beginTransaction();
+
+        try {
+            $randomPassword = Str::random(10);
+
+            $user = $this->userService->create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $randomPassword,
+                'status' => 'A',
+                'role' => 'C',
+            ]);
+
+            $user = json_decode($user->content())->data;
+
+            $data['user_id'] = $user->id;
+
+            $client = $this->clientRepository->create($data);
+
+            DB::commit();
+
+            return $client;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage().": ".$e->getLine()." - ".$e->getTraceAsString());
+        }
     }
 
     public function getAll()
