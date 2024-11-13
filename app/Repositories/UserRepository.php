@@ -76,4 +76,18 @@ class UserRepository implements UserRepositoryInterface
 
         return ApiResponseService::success(null, 'Users Deleted');
     }
+
+    public function updateEmail($userId, $newEmail)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return ApiResponseService::error('User not found', 404);
+        }
+
+        $user->email = $newEmail;
+        $user->save();
+
+        return ApiResponseService::success($user, 'User Email Updated');
+    }
 }

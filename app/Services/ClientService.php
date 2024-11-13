@@ -27,7 +27,7 @@ class ClientService
         DB::beginTransaction();
 
         try {
-//            $randomPassword = Str::random(10);
+//            $randomPassword = Str::random(10); // TODO: descomentar e remover a linha abaixo para gerar senha aleatória
             $randomPassword = 'password';
 
             $user = $this->userService->create([
@@ -63,10 +63,34 @@ class ClientService
         return $this->clientRepository->getById($id);
     }
 
+//    public function update(UpdateClientRequest $request, $id)
+//    {
+//        $data = $request->validated();
+//        return $this->clientRepository->update($data, $id);
+//    }
+
     public function update(UpdateClientRequest $request, $id)
     {
         $data = $request->validated();
-        return $this->clientRepository->update($data, $id);
+        $clientResponse = $this->clientRepository->getById($id);
+        $client = json_decode($clientResponse->content())->data;
+
+        DB::beginTransaction();
+
+        try {
+            if ($client->email !== $data['email']) {
+                $this->userService->updateEmail($client->user_id, $data['email']);
+            }
+
+            $updatedClient = $this->clientRepository->update($data, $id);
+
+            DB::commit();
+
+            return $updatedClient;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage().": ".$e->getLine()." - ".$e->getTraceAsString());
+        }
     }
 
     public function delete($id)

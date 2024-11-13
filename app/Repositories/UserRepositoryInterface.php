@@ -15,4 +15,6 @@ interface UserRepositoryInterface
     public function delete($id);
 
     public function massDelete($request);
+
+    public function updateEmail($userId, $newEmail);
 }

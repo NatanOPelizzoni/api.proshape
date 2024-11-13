@@ -21,6 +21,11 @@ class UserService
         return $this->userRepository->create($data);
     }
 
+    public function updateEmail($userId, $newEmail)
+    {
+        return $this->userRepository->updateEmail($userId, $newEmail);
+    }
+
     public function getAll()
     {
         return $this->userRepository->getAll();
