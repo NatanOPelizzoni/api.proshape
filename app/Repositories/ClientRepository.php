@@ -9,19 +9,15 @@ class ClientRepository implements ClientRepositoryInterface
 {
     public function create(array $data)
     {
-        $client = Client::create(array_merge($data, [
+        return Client::create(array_merge($data, [
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
         ]));
-
-        return ApiResponseService::success($client, 'Client Created', 201);
     }
 
     public function getAll()
     {
-        $clients = Client::all();
-
-        return ApiResponseService::success($clients, 'Clients Retrieved');
+        return Client::all();
     }
 
     public function getById($id)
@@ -29,10 +25,10 @@ class ClientRepository implements ClientRepositoryInterface
         $client = Client::find($id);
 
         if (!$client) {
-            return ApiResponseService::error('Client not found', 404);
+            return null;
         }
 
-        return ApiResponseService::success($client, 'Client Retrieved');
+        return $client;
     }
 
     public function update(array $data, $id)
@@ -40,14 +36,14 @@ class ClientRepository implements ClientRepositoryInterface
         $client = Client::find($id);
 
         if (!$client) {
-            return ApiResponseService::error('Client not found', 404);
+            return null;
         }
 
         $client->update(array_merge($data, [
             'updated_by' => auth()->id(),
         ]));
 
-        return ApiResponseService::success($client, 'Client Updated');
+        return $client;
     }
 
     public function delete($id)
@@ -55,12 +51,12 @@ class ClientRepository implements ClientRepositoryInterface
         $client = Client::find($id);
 
         if (!$client) {
-            return ApiResponseService::error('Client not found', 404);
+            return false;
         }
 
         $client->delete();
 
-        return ApiResponseService::success(null, 'Client Deleted');
+        return true;
     }
 
     public function massDelete($request)
@@ -69,11 +65,11 @@ class ClientRepository implements ClientRepositoryInterface
         $clients = Client::whereIn('id', $ids)->get();
 
         if ($clients->isEmpty()) {
-            return ApiResponseService::error('Clients not found', 404);
+            return false;
         }
 
         Client::whereIn('id', $ids)->delete();
 
-        return ApiResponseService::success(null, 'Clients Deleted');
+        return true;
     }
 }

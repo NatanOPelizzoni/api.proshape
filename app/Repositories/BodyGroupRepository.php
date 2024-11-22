@@ -9,19 +9,15 @@ class BodyGroupRepository implements BodyGroupRepositoryInterface
 {
     public function create(array $data)
     {
-        $bodyGroup = BodyGroup::create(array_merge($data, [
+        return BodyGroup::create(array_merge($data, [
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
         ]));
-
-        return ApiResponseService::success($bodyGroup, 'Body Group Created', 201);
     }
 
     public function getAll()
     {
-        $bodyGroups = BodyGroup::all();
-
-        return ApiResponseService::success($bodyGroups, 'Body Groups Retrieved');
+        return BodyGroup::all();
     }
 
     public function getById($id)
@@ -29,10 +25,10 @@ class BodyGroupRepository implements BodyGroupRepositoryInterface
         $bodyGroup = BodyGroup::find($id);
 
         if (!$bodyGroup) {
-            return ApiResponseService::error('Body Group not found', 404);
+            return null;
         }
 
-        return ApiResponseService::success($bodyGroup, 'Body Group Retrieved');
+        return $bodyGroup;
     }
 
     public function update(array $data, $id)
@@ -40,14 +36,14 @@ class BodyGroupRepository implements BodyGroupRepositoryInterface
         $bodyGroup = BodyGroup::find($id);
 
         if (!$bodyGroup) {
-            return ApiResponseService::error('Body Group not found', 404);
+            return null;
         }
 
         $bodyGroup->update(array_merge($data, [
             'updated_by' => auth()->id(),
         ]));
 
-        return ApiResponseService::success($bodyGroup, 'Body Group Updated');
+        return $bodyGroup;
     }
 
     public function delete($id)
@@ -55,12 +51,12 @@ class BodyGroupRepository implements BodyGroupRepositoryInterface
         $bodyGroup = BodyGroup::find($id);
 
         if (!$bodyGroup) {
-            return ApiResponseService::error('Body Group not found', 404);
+            return false;
         }
 
         $bodyGroup->delete();
 
-        return ApiResponseService::success(null, 'Body Group Deleted');
+        return true;
     }
 
     public function massDelete($request)
@@ -69,11 +65,11 @@ class BodyGroupRepository implements BodyGroupRepositoryInterface
         $bodyGroups = BodyGroup::whereIn('id', $ids)->get();
 
         if ($bodyGroups->isEmpty()) {
-            return ApiResponseService::error('Body Groups not found', 404);
+            return false;
         }
 
         BodyGroup::whereIn('id', $ids)->delete();
 
-        return ApiResponseService::success(null, 'Body Groups Deleted');
+        return true;
     }
 }

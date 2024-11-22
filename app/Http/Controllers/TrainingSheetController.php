@@ -46,4 +46,9 @@ class TrainingSheetController extends Controller
     {
         return $this->trainingSheetService->massDelete($request);
     }
+
+    public function generateTrainingSheet(Request $request)
+    {
+        return $this->trainingSheetService->generateTrainingSheet($request);
+    }
 }

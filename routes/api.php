@@ -52,4 +52,7 @@ Route::group(['middleware' => 'auth:sanctum'], function ($router) {
     Route::patch('/training-sheet/{id}', [TrainingSheetController::class, 'update']);
     Route::delete('/training-sheet/{id}', [TrainingSheetController::class, 'destroy']);
     Route::post('/training-sheet/massdelete', [TrainingSheetController::class, 'massDelete']);
+
+    //Ai training sheet exercise generate
+    Route::post('/training-sheet/generate', [TrainingSheetController::class, 'generateTrainingSheet']);
 });
