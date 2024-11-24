@@ -3,36 +3,25 @@
 namespace App\Repositories;
 
 use App\Models\Exercise;
-use App\Services\Shared\ApiResponseService;
 
 class ExerciseRepository implements ExerciseRepositoryInterface
 {
     public function create(array $data)
     {
-        $exercise = Exercise::create(array_merge($data, [
+        return Exercise::create(array_merge($data, [
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
         ]));
-
-        return ApiResponseService::success($exercise, 'Exercise Created', 201);
     }
 
     public function getAll()
     {
-        $exercises = Exercise::all();
-
-        return ApiResponseService::success($exercises, 'Exercises Retrieved');
+        return Exercise::all();
     }
 
     public function getById($id)
     {
-        $exercise = Exercise::find($id);
-
-        if (!$exercise) {
-            return ApiResponseService::error('Exercise not found', 404);
-        }
-
-        return ApiResponseService::success($exercise, 'Exercise Retrieved');
+        return Exercise::find($id);
     }
 
     public function update(array $data, $id)
@@ -40,14 +29,14 @@ class ExerciseRepository implements ExerciseRepositoryInterface
         $exercise = Exercise::find($id);
 
         if (!$exercise) {
-            return ApiResponseService::error('Exercise not found', 404);
+            return null;
         }
 
         $exercise->update(array_merge($data, [
             'updated_by' => auth()->id(),
         ]));
 
-        return ApiResponseService::success($exercise, 'Exercise Updated');
+        return $exercise;
     }
 
     public function delete($id)
@@ -55,12 +44,12 @@ class ExerciseRepository implements ExerciseRepositoryInterface
         $exercise = Exercise::find($id);
 
         if (!$exercise) {
-            return ApiResponseService::error('Exercise not found', 404);
+            return false;
         }
 
         $exercise->delete();
 
-        return ApiResponseService::success(null, 'Exercise Deleted');
+        return true;
     }
 
     public function massDelete($request)
@@ -69,11 +58,11 @@ class ExerciseRepository implements ExerciseRepositoryInterface
         $exercises = Exercise::whereIn('id', $ids)->get();
 
         if ($exercises->isEmpty()) {
-            return ApiResponseService::error('Exercises not found', 404);
+            return false;
         }
 
         Exercise::whereIn('id', $ids)->delete();
 
-        return ApiResponseService::success(null, 'Exercises Deleted');
+        return true;
     }
 }

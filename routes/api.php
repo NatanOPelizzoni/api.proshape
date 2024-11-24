@@ -3,6 +3,7 @@
 use App\Http\Controllers\BodyGroupController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\TrainingSheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -43,4 +44,15 @@ Route::group(['middleware' => 'auth:sanctum'], function ($router) {
     Route::patch('/client/{id}', [ClientController::class, 'update']);
     Route::delete('/client/{id}', [ClientController::class, 'destroy']);
     Route::post('/client/massdelete', [ClientController::class, 'massDelete']);
+
+    // Training Sheet Routes
+    Route::post('/training-sheet', [TrainingSheetController::class, 'store']);
+    Route::get('/training-sheet', [TrainingSheetController::class, 'index']);
+    Route::get('/training-sheet/{id}', [TrainingSheetController::class, 'show']);
+    Route::patch('/training-sheet/{id}', [TrainingSheetController::class, 'update']);
+    Route::delete('/training-sheet/{id}', [TrainingSheetController::class, 'destroy']);
+    Route::post('/training-sheet/massdelete', [TrainingSheetController::class, 'massDelete']);
+
+    //Ai training sheet exercise generate
+    Route::post('/training-sheet/generate', [TrainingSheetController::class, 'generateTrainingSheet']);
 });
